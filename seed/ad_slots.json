@@ -1,0 +1,6 @@
+[
+  {"id":"route_top","placement":"route_page_header","size":"728x90","enabled":true},
+  {"id":"route_inline","placement":"route_page_body","size":"300x250","enabled":true},
+  {"id":"calc_sidebar","placement":"calculator_sidebar","size":"300x600","enabled":false},
+  {"id":"timeline_footer","placement":"timeline_footer","size":"728x90","enabled":true}
+]

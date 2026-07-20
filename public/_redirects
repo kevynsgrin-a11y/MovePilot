@@ -1,0 +1,5 @@
+# Cloudflare Pages SPA fallback. Any client-side route resolves to the SPA shell so
+# deep links / refreshes on /tools/volume, /move/:slug, /dashboard/* etc. don't 404.
+# Pages Functions under /api/* take precedence over this static fallback, so backend
+# routes are unaffected — do NOT add an /api/* rule here.
+/*  /index.html  200

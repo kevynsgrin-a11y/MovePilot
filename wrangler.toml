@@ -1,0 +1,28 @@
+# wrangler.toml — MovePilot Cloudflare PAGES configuration (SPEC §2, §8).
+# This is the PAGES project ONLY. It declares the static output dir, the D1 and KV
+# bindings, and the queue PRODUCER for MP_FMCSA_INGEST (used by
+# POST /api/admin/ingest/trigger). It MUST NOT declare [[queues.consumers]] or
+# [triggers] — Pages Functions cannot host queue consumers or cron; those live in the
+# companion Worker (worker/wrangler.toml).
+
+name = "movepilot"
+compatibility_date = "2026-07-16"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "dist"
+
+# --- D1 (relational core: users, sessions, inventory, timelines, vault, logs) ---
+[[d1_databases]]
+binding = "MP_DB"
+database_name = "movepilot"
+database_id = "00000000-0000-0000-0000-000000000000" # set via: npx wrangler d1 create movepilot
+migrations_dir = "migrations"
+
+# --- KV (edge config tables + cached FMCSA records) ---
+[[kv_namespaces]]
+binding = "MP_KV"
+id = "00000000000000000000000000000000" # set via: npx wrangler kv namespace create MP_KV
+
+# --- Queue PRODUCER only (admin ingest trigger enqueues to MP_FMCSA_INGEST) ---
+[[queues.producers]]
+binding = "MP_FMCSA_INGEST"
+queue = "mp-fmcsa-ingest"

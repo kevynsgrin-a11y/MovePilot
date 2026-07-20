@@ -1,0 +1,40 @@
+{
+  "name": "movepilot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "MovePilot — privacy-first relocation orchestration on Cloudflare Pages + Functions (backend) and a Vite + React + TS + Tailwind SPA (frontend).",
+  "scripts": {
+    "dev": "wrangler pages dev",
+    "dev:web": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "migrate": "wrangler d1 migrations apply MP_DB --local",
+    "migrate:remote": "wrangler d1 migrations apply MP_DB --remote",
+    "seed": "node scripts/seed-kv.js",
+    "seed:remote": "node scripts/seed-kv.js --remote",
+    "deploy": "wrangler pages deploy"
+  },
+  "dependencies": {
+    "framer-motion": "^11.11.17",
+    "lucide-react": "^0.454.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8",
+    "wrangler": "^3.90.0"
+  }
+}

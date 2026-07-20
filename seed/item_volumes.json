@@ -1,0 +1,22 @@
+{
+  "sofa":         {"label":"Sofa (3-seat)",       "volume_cuft":45.0},
+  "loveseat":     {"label":"Loveseat",            "volume_cuft":30.0},
+  "armchair":     {"label":"Armchair",            "volume_cuft":20.0},
+  "queen_bed":    {"label":"Queen bed + mattress","volume_cuft":60.0},
+  "king_bed":     {"label":"King bed + mattress", "volume_cuft":70.0},
+  "twin_bed":     {"label":"Twin bed + mattress", "volume_cuft":40.0},
+  "dresser":      {"label":"Dresser",             "volume_cuft":25.0},
+  "nightstand":   {"label":"Nightstand",          "volume_cuft":8.0},
+  "dining_table": {"label":"Dining table",        "volume_cuft":35.0},
+  "dining_chair": {"label":"Dining chair",        "volume_cuft":5.0},
+  "refrigerator": {"label":"Refrigerator",        "volume_cuft":60.0},
+  "washer":       {"label":"Washer",              "volume_cuft":25.0},
+  "dryer":        {"label":"Dryer",               "volume_cuft":25.0},
+  "tv_stand":     {"label":"TV stand",            "volume_cuft":20.0},
+  "bookshelf":    {"label":"Bookshelf",           "volume_cuft":20.0},
+  "desk":         {"label":"Desk",                "volume_cuft":25.0},
+  "wardrobe_box": {"label":"Wardrobe box",        "volume_cuft":13.0},
+  "small":        {"label":"Small box",           "volume_cuft":1.5},
+  "medium":       {"label":"Medium box",          "volume_cuft":3.0},
+  "large":        {"label":"Large box",           "volume_cuft":4.5}
+}

@@ -1,0 +1,6 @@
+node_modules/
+.wrangler/
+dist/
+.env
+.claude/ntfy-topic
+.claude/settings.local.json

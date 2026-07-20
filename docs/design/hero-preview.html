@@ -1,0 +1,374 @@
+<style>
+  /* MovePilot — Hero Preview. Deliberately single-world DARK "cockpit" (blueprint: marketing defaults dark).
+     Fonts use the blueprint's fallback stacks (Fraunces/Inter/JetBrains Mono webfonts are blocked by the artifact CSP). */
+  :root{
+    --bg:#0B1220; --surface:#0F1A2C; --surface-raised:#13233A; --sunk:#0A0F1A;
+    --border:#1D2B40; --border-strong:#2E4462;
+    --text:#EAF1F7; --muted:#A6B6C9; --faint:#8193A8;
+    --navy:#0B2A4A; --navy-sky:#4FA3E0;
+    --accent:#2FD3C1; --accent-bright:#3FE0CF; --accent-ink:#0E8F7E;
+    --copper:#B7793F; --copper-bright:#D69A5F;
+    --success:#4ADE9E;
+    --serif: "Fraunces", Georgia, "Times New Roman", serif;
+    --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --maxw:1200px;
+    --e2:0 4px 12px rgba(0,0,0,.35), 0 2px 4px rgba(0,0,0,.25);
+    --e4:0 24px 64px rgba(0,0,0,.55);
+    --glow:0 0 0 1px rgba(47,211,193,.35), 0 0 28px rgba(63,224,207,.18);
+    --ease-out:cubic-bezier(.22,1,.36,1);
+    --ease-expo:cubic-bezier(.16,1,.30,1);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0}
+  .page{
+    background:var(--bg); color:var(--text);
+    font-family:var(--sans); font-size:16px; line-height:1.6;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+    font-variant-numeric:tabular-nums;
+  }
+  .page ::selection{background:rgba(47,211,193,.28); color:#fff}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--accent-bright); outline-offset:2px; border-radius:6px}
+
+  /* ---------- Header ---------- */
+  .hd{
+    position:sticky; top:0; z-index:40; height:64px;
+    display:flex; align-items:center; gap:24px;
+    padding:0 clamp(16px,4vw,40px);
+    background:rgba(11,18,32,.72); backdrop-filter:blur(12px) saturate(120%);
+    border-bottom:1px solid var(--border);
+  }
+  .brand{display:flex; align-items:center; gap:10px; font-family:var(--serif); font-size:1.25rem; font-weight:600; letter-spacing:-.01em}
+  .brand svg{display:block; overflow:visible}
+  .nav{display:flex; gap:22px; margin-left:8px}
+  .nav a{font-size:.9rem; color:var(--muted); text-decoration:none; padding:6px 2px; position:relative}
+  .nav a::after{content:""; position:absolute; left:0; right:0; bottom:-2px; height:2px; background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform .18s var(--ease-out)}
+  .nav a:hover{color:var(--text)} .nav a:hover::after{transform:scaleX(1)}
+  .hd-right{margin-left:auto; display:flex; align-items:center; gap:16px}
+  .signin{font-size:.9rem; color:var(--muted); text-decoration:none}
+  .signin:hover{color:var(--text)}
+  .btn{
+    font-family:var(--sans); font-weight:600; font-size:.925rem; cursor:pointer;
+    border:none; border-radius:999px; padding:11px 20px; transition:transform .14s var(--ease-out), box-shadow .14s var(--ease-out), filter .14s;
+  }
+  .btn-primary{background:var(--accent); color:#062019; box-shadow:var(--e2)}
+  .btn-primary:hover{transform:translateY(-2px); filter:brightness(1.06); box-shadow:0 8px 22px rgba(47,211,193,.28)}
+  .btn-primary:active{transform:translateY(0) scale(.98)}
+  .btn-lg{padding:15px 26px; font-size:1rem}
+  .btn-ghost{background:transparent; color:var(--text); border:1.5px solid rgba(255,255,255,.28)}
+  .btn-ghost:hover{border-color:var(--accent); color:var(--accent-bright)}
+  @media(max-width:900px){ .nav{display:none} }
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative; min-height:calc(100svh - 64px); display:flex; align-items:center; isolation:isolate; padding:clamp(40px,7vh,88px) clamp(16px,4vw,40px)}
+  .hero-bg{position:absolute; inset:0; z-index:-1; overflow:hidden;
+    background:
+      radial-gradient(60% 55% at 82% 12%, rgba(47,211,193,.20), transparent 60%),
+      radial-gradient(55% 60% at 10% 92%, rgba(183,121,63,.15), transparent 55%),
+      radial-gradient(90% 90% at 50% 30%, rgba(11,42,74,.55), transparent 72%),
+      var(--bg);
+  }
+  .grid-lines{position:absolute; inset:-2px; opacity:.5;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(120,160,200,.05) 0 1px, transparent 1px 88px),
+      repeating-linear-gradient(90deg, rgba(120,160,200,.05) 0 1px, transparent 1px 88px);
+    mask-image:radial-gradient(120% 100% at 70% 20%, #000 30%, transparent 80%);
+  }
+  .route{position:absolute; top:4%; right:-2%; width:min(58%,760px); height:auto; opacity:.9}
+  .vignette{position:absolute; inset:0; background:radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(6,12,22,.6))}
+
+  .hero-inner{width:100%; max-width:var(--maxw); margin:0 auto; display:grid; grid-template-columns:1.15fr .85fr; gap:clamp(32px,5vw,72px); align-items:center}
+
+  .eyebrow{display:inline-flex; align-items:center; gap:8px; font-size:.75rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--accent-bright);
+    background:rgba(47,211,193,.08); border:1px solid rgba(47,211,193,.22); padding:6px 12px; border-radius:999px}
+  .eyebrow .dot{width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px rgba(47,211,193,.15)}
+  h1{font-family:var(--serif); font-weight:500; font-size:clamp(2.5rem,5.6vw,4.4rem); line-height:1.03; letter-spacing:-.02em; margin:22px 0 0; text-wrap:balance; color:#fff}
+  h1 .sw{color:var(--accent-bright); font-style:italic}
+  .sub{font-size:clamp(1.02rem,1.4vw,1.18rem); color:var(--muted); margin:22px 0 0; max-width:34ch; line-height:1.6}
+  .cta{display:flex; flex-wrap:wrap; gap:14px; margin-top:30px}
+  .micro{margin-top:14px; font-size:.8rem; color:var(--faint)}
+  .trust{display:flex; flex-wrap:wrap; gap:18px 22px; margin-top:26px; padding-top:22px; border-top:1px dashed var(--border-strong)}
+  .trust li{list-style:none; display:flex; align-items:center; gap:9px; font-size:.83rem; color:var(--muted)}
+  .trust svg{flex:none; color:var(--accent)}
+  .cred-line{margin-top:16px; font-size:.76rem; color:var(--faint); display:flex; align-items:center; gap:8px}
+  .cred-line b{color:var(--muted); font-weight:600}
+  ul{margin:0; padding:0}
+
+  /* ---------- Mini calculator ---------- */
+  .calc{position:relative; background:rgba(11,18,32,.68); backdrop-filter:blur(18px) saturate(125%);
+    border:1px solid rgba(255,255,255,.10); border-radius:24px; box-shadow:var(--e4); padding:24px}
+  .calc::before{content:""; position:absolute; inset:0; border-radius:24px; padding:1px; pointer-events:none;
+    background:linear-gradient(140deg, rgba(63,224,207,.5), transparent 40%, transparent 70%, rgba(183,121,63,.35));
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude}
+  .calc-hd{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px}
+  .calc-hd h2{font-family:var(--sans); font-size:1.02rem; font-weight:600; margin:0; color:#fff}
+  .vchip{display:inline-flex; align-items:center; gap:6px; font-size:.68rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--success); background:rgba(74,222,158,.10); border:1px solid rgba(74,222,158,.28); padding:4px 9px; border-radius:999px}
+  .field{margin-bottom:16px}
+  .flabel{font-size:.72rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--faint); margin-bottom:8px}
+  .seg{display:flex; gap:4px; background:var(--sunk); border:1px solid var(--border); border-radius:12px; padding:4px}
+  .seg button{flex:1; font-family:var(--sans); font-size:.82rem; font-weight:600; color:var(--muted); background:transparent; border:none; border-radius:8px; padding:9px 4px; cursor:pointer; transition:color .15s}
+  .seg button[aria-checked="true"]{color:#062019}
+  .seg{position:relative}
+  .seg-thumb{position:absolute; top:4px; bottom:4px; border-radius:8px; background:var(--accent); box-shadow:0 2px 8px rgba(47,211,193,.35); transition:left .28s var(--ease-out), width .28s var(--ease-out); z-index:0}
+  .seg button{position:relative; z-index:1}
+  .zips{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:10px}
+  .zip{width:100%; font-family:var(--mono); font-size:1.02rem; letter-spacing:.04em; text-align:center; color:var(--text);
+    background:var(--sunk); border:1.5px solid var(--border-strong); border-radius:10px; padding:11px 8px}
+  .zip:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(47,211,193,.2)}
+  .zarrow{color:var(--accent); display:flex}
+  .out{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:20px}
+  .tile{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:13px 12px; text-align:left}
+  .tile .k{font-size:.68rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--faint)}
+  .tile .v{font-family:var(--sans); font-weight:600; font-size:clamp(1.15rem,2vw,1.5rem); line-height:1.1; margin-top:6px; color:#fff; font-variant-numeric:tabular-nums}
+  .tile .u{font-size:.72rem; color:var(--muted); font-weight:500}
+  .verdict{display:flex; align-items:flex-start; gap:9px; margin-top:16px; padding:12px 14px; background:rgba(47,211,193,.07); border:1px solid rgba(47,211,193,.2); border-radius:12px; font-size:.85rem; color:var(--text)}
+  .verdict svg{flex:none; color:var(--accent); margin-top:1px}
+  .calc-foot{margin-top:16px; display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:.8rem}
+  .breakdown{color:var(--accent-bright); text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:6px}
+  .breakdown:hover .arw{transform:translateX(3px)} .arw{transition:transform .15s var(--ease-out)}
+  .stamp{font-family:var(--mono); font-size:.68rem; color:var(--faint)}
+
+  /* scroll cue */
+  .cue{position:absolute; left:50%; bottom:22px; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:6px; color:var(--faint); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase}
+  .cue svg{animation:bob 1.8s var(--ease-out) infinite}
+  @keyframes bob{0%,100%{transform:translateY(0); opacity:.6} 50%{transform:translateY(6px); opacity:1}}
+
+  /* ---------- Credibility strip ---------- */
+  .cred{border-top:1px solid var(--border); background:var(--sunk)}
+  .cred-in{max-width:var(--maxw); margin:0 auto; padding:26px clamp(16px,4vw,40px); display:flex; flex-wrap:wrap; align-items:center; gap:14px 30px}
+  .cred-in .lead{font-family:var(--serif); font-style:italic; font-size:1.05rem; color:var(--muted)}
+  .pills{display:flex; flex-wrap:wrap; gap:10px; margin-left:auto}
+  .pill{font-size:.78rem; color:var(--muted); background:var(--surface); border:1px solid var(--border); border-radius:999px; padding:7px 13px; display:inline-flex; gap:7px; align-items:center}
+  .pill svg{color:var(--accent)}
+
+  /* ---------- entrance choreography ---------- */
+  .reveal{opacity:0; transform:translateY(20px)}
+  .in .reveal{opacity:1; transform:none; transition:opacity .6s var(--ease-out), transform .6s var(--ease-expo)}
+  .in .r1{transition-delay:.05s} .in .r2{transition-delay:.14s} .in .r3{transition-delay:.24s}
+  .in .r4{transition-delay:.34s} .in .r5{transition-delay:.44s} .in .r6{transition-delay:.5s}
+  .calc.reveal{transform:translateY(28px) scale(.985)}
+  .in .calc.reveal{transform:none}
+  .route path.draw{stroke-dasharray:1; stroke-dashoffset:1; }
+  .in .route path.draw{animation:draw 1.6s var(--ease-expo) .3s forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+
+  @media(max-width:860px){
+    .hero-inner{grid-template-columns:1fr; gap:28px}
+    .calc{order:-1}
+    .sub{max-width:60ch}
+    .route{display:none}
+  }
+  @media(max-width:420px){ .out{grid-template-columns:1fr 1fr 1fr} .tile .v{font-size:1.1rem} }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important}
+    .reveal{opacity:1; transform:none}
+    .route path.draw{stroke-dashoffset:0}
+  }
+</style>
+
+<div class="page">
+  <header class="hd">
+    <span class="brand">
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+        <circle cx="5" cy="20" r="3" fill="#2FD3C1"/>
+        <circle cx="21" cy="6" r="3.4" fill="none" stroke="#B7793F" stroke-width="1.6"/>
+        <circle cx="21" cy="6" r="1.3" fill="#B7793F"/>
+        <path d="M6 18 C 10 6, 14 20, 20 7" stroke="#3FE0CF" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="2 3" fill="none"/>
+      </svg>
+      MovePilot
+    </span>
+    <nav class="nav" aria-label="Primary">
+      <a href="#">Tools</a><a href="#">Timeline</a><a href="#">Verify a Carrier</a><a href="#">Pricing</a><a href="#">How It Works</a>
+    </nav>
+    <div class="hd-right">
+      <a class="signin" href="#">Sign in</a>
+      <button class="btn btn-primary">Start a move — free</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="hero" aria-labelledby="h1">
+      <div class="hero-bg" aria-hidden="true">
+        <div class="grid-lines"></div>
+        <svg class="route" viewBox="0 0 760 420" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="rl" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="#2FD3C1"/><stop offset="1" stop-color="#B7793F"/>
+            </linearGradient>
+          </defs>
+          <path class="draw" pathLength="1" d="M40 360 C 240 320, 300 120, 700 70" stroke="url(#rl)" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="40" cy="360" r="6" fill="#2FD3C1"/>
+          <circle cx="40" cy="360" r="12" fill="none" stroke="#2FD3C1" stroke-opacity=".4"/>
+          <circle cx="700" cy="70" r="7.5" fill="none" stroke="#D69A5F" stroke-width="2"/>
+          <circle cx="700" cy="70" r="2.5" fill="#D69A5F"/>
+        </svg>
+        <div class="vignette"></div>
+      </div>
+
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <span class="eyebrow reveal r1"><span class="dot"></span>Privacy-first relocation</span>
+          <h1 id="h1" class="reveal r2">Plan your move on real math, not a hundred <span class="sw">spam calls</span>.</h1>
+          <p class="sub reveal r3">MovePilot calculates your exact cubic volume, shipping weight, and cost from your own inventory — and verifies any carrier against federal FMCSA safety records. No phone. No email. No lead brokers.</p>
+          <div class="cta reveal r4">
+            <button class="btn btn-primary btn-lg">Calculate my move — free</button>
+            <button class="btn btn-ghost btn-lg">Verify a carrier</button>
+          </div>
+          <p class="micro reveal r4">No account needed. We never sell your data.</p>
+          <ul class="trust reveal r5">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>No email or phone required</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>FMCSA safety-verified data</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg>We don't sell leads — ever</li>
+          </ul>
+          <p class="cred-line reveal r6"><b>Powered by federal FMCSA SAFER records</b> · updated weekly</p>
+        </div>
+
+        <aside class="calc reveal r6" aria-labelledby="calc-title">
+          <div class="calc-hd">
+            <h2 id="calc-title">Instant estimate — no signup</h2>
+            <span class="vchip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Live</span>
+          </div>
+
+          <div class="field">
+            <div class="flabel" id="bed-lbl">Home size</div>
+            <div class="seg" role="radiogroup" aria-labelledby="bed-lbl" id="seg">
+              <span class="seg-thumb" aria-hidden="true"></span>
+              <button role="radio" aria-checked="false" data-vol="studio">Studio</button>
+              <button role="radio" aria-checked="false" data-vol="one">1BR</button>
+              <button role="radio" aria-checked="true"  data-vol="two">2BR</button>
+              <button role="radio" aria-checked="false" data-vol="three">3BR</button>
+              <button role="radio" aria-checked="false" data-vol="four">4BR+</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="flabel">Route</div>
+            <div class="zips">
+              <input class="zip" id="zipA" inputmode="numeric" maxlength="5" value="10001" aria-label="From ZIP code">
+              <span class="zarrow" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+              <input class="zip" id="zipB" inputmode="numeric" maxlength="5" value="30301" aria-label="To ZIP code">
+            </div>
+          </div>
+
+          <div class="out" id="out" aria-live="polite" aria-atomic="true">
+            <div class="tile"><div class="k">Volume</div><div class="v"><span id="o-cuft">840</span></div><div class="u">cu ft</div></div>
+            <div class="tile"><div class="k">Weight</div><div class="v"><span id="o-lb">5,900</span></div><div class="u">lb</div></div>
+            <div class="tile"><div class="k">Est. cost</div><div class="v" style="font-size:clamp(1rem,1.6vw,1.25rem)">$<span id="o-low">3,400</span>–<span id="o-high">4,600</span></div><div class="u">full-service</div></div>
+          </div>
+
+          <div class="verdict" id="verdict">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/></svg>
+            <span id="verdict-txt">Full-service likely cheaper than a DIY truck for this load.</span>
+          </div>
+
+          <div class="calc-foot">
+            <a class="breakdown" href="#">See the full breakdown <span class="arw">→</span></a>
+            <span class="stamp" id="stamp">est. 2026-07-19</span>
+          </div>
+        </aside>
+      </div>
+
+      <div class="cue" aria-hidden="true">Scroll<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+    </section>
+
+    <section class="cred" aria-label="Trust">
+      <div class="cred-in">
+        <span class="lead">Every other site sells your number in 90 seconds. We built the opposite.</span>
+        <div class="pills">
+          <span class="pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/></svg>Escrowed identity</span>
+          <span class="pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><path d="M4 4l16 16"/></svg>Double-blind routing</span>
+          <span class="pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>FMCSA-verified</span>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // entrance
+  requestAnimationFrame(function(){ document.querySelector(".page").classList.add("in"); });
+
+  var VOL = {studio:300, one:450, two:840, three:1300, four:1800};
+  var seg = document.getElementById("seg");
+  var buttons = Array.prototype.slice.call(seg.querySelectorAll("button"));
+  var thumb = seg.querySelector(".seg-thumb");
+  var zipA = document.getElementById("zipA"), zipB = document.getElementById("zipB");
+  var cur = {cuft:840, lb:5900, low:3400, high:4600};
+
+  function fmt(n){ return Math.round(n).toLocaleString("en-US"); }
+
+  function moveThumb(){
+    var active = seg.querySelector('button[aria-checked="true"]');
+    thumb.style.left = active.offsetLeft + "px";
+    thumb.style.width = active.offsetWidth + "px";
+  }
+
+  function targets(){
+    var active = seg.querySelector('button[aria-checked="true"]');
+    var cuft = VOL[active.getAttribute("data-vol")];
+    var a = parseInt(zipA.value,10) || 10001, b = parseInt(zipB.value,10) || 30301;
+    var df = 1 + Math.min(Math.max(Math.abs(a-b) - 20300, 0)/400000, 0.4);
+    return {
+      cuft: cuft,
+      lb: Math.round(cuft*7/100)*100,
+      low: Math.round(cuft*4.05*df/100)*100,
+      high: Math.round(cuft*5.48*df/100)*100,
+      big: cuft >= 1000
+    };
+  }
+
+  var els = {cuft:document.getElementById("o-cuft"), lb:document.getElementById("o-lb"), low:document.getElementById("o-low"), high:document.getElementById("o-high")};
+  var raf;
+  function render(t){
+    if(reduce){
+      els.cuft.textContent=fmt(t.cuft); els.lb.textContent=fmt(t.lb); els.low.textContent=fmt(t.low); els.high.textContent=fmt(t.high);
+      cur={cuft:t.cuft,lb:t.lb,low:t.low,high:t.high};
+    } else {
+      var from={cuft:cur.cuft,lb:cur.lb,low:cur.low,high:cur.high};
+      var start=null, dur=560;
+      cancelAnimationFrame(raf);
+      function step(ts){
+        if(!start) start=ts;
+        var p=Math.min((ts-start)/dur,1), e=1-Math.pow(1-p,3);
+        els.cuft.textContent=fmt(from.cuft+(t.cuft-from.cuft)*e);
+        els.lb.textContent=fmt(from.lb+(t.lb-from.lb)*e);
+        els.low.textContent=fmt(from.low+(t.low-from.low)*e);
+        els.high.textContent=fmt(from.high+(t.high-from.high)*e);
+        if(p<1) raf=requestAnimationFrame(step);
+        else cur={cuft:t.cuft,lb:t.lb,low:t.low,high:t.high};
+      }
+      raf=requestAnimationFrame(step);
+    }
+    var vt=document.getElementById("verdict-txt");
+    vt.textContent = t.big ? "Full-service likely cheaper than a DIY truck for this load."
+                           : "A DIY truck plus hired labor is likely your cheapest option.";
+  }
+
+  function select(btn){
+    buttons.forEach(function(b){ b.setAttribute("aria-checked", b===btn ? "true":"false"); });
+    moveThumb(); render(targets());
+  }
+  buttons.forEach(function(b, i){
+    b.addEventListener("click", function(){ select(b); });
+    b.addEventListener("keydown", function(e){
+      var dir = e.key==="ArrowRight"||e.key==="ArrowDown" ? 1 : (e.key==="ArrowLeft"||e.key==="ArrowUp" ? -1 : 0);
+      if(!dir) return; e.preventDefault();
+      var n = (i+dir+buttons.length)%buttons.length;
+      buttons[n].focus(); select(buttons[n]);
+    });
+  });
+  var deb;
+  [zipA,zipB].forEach(function(z){
+    z.addEventListener("input", function(){ z.value=z.value.replace(/\D/g,"").slice(0,5); clearTimeout(deb); deb=setTimeout(function(){ render(targets()); },250); });
+  });
+  window.addEventListener("resize", moveThumb);
+  window.addEventListener("load", moveThumb);
+  moveThumb();
+})();
+</script>

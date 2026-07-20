@@ -1,0 +1,38 @@
+# worker/wrangler.toml — MovePilot COMPANION WORKER (SPEC §2, §8).
+# Separate deploy target from the Pages project. It binds the SAME D1 (MP_DB) and KV
+# (MP_KV) and hosts the background/scheduled work Pages Functions cannot:
+#   • queue() consumer  — processes fmcsa_refresh messages into KV + ingest_log
+#   • scheduled() cron  — (a) weekly: enqueue the SAFER re-ingest batch (producer)
+#                          (b) every 15 min: dispatch due D1 `alerts`
+# It declares BOTH a queue producer (so the weekly cron can .send()) and a consumer.
+
+name = "movepilot-worker"
+main = "index.js"
+compatibility_date = "2026-07-16"
+compatibility_flags = ["nodejs_compat"]
+
+# --- Same D1 as the Pages project ---
+[[d1_databases]]
+binding = "MP_DB"
+database_name = "movepilot"
+database_id = "00000000-0000-0000-0000-000000000000" # same DB id as root wrangler.toml
+
+# --- Same KV as the Pages project ---
+[[kv_namespaces]]
+binding = "MP_KV"
+id = "00000000000000000000000000000000" # same namespace id as root wrangler.toml
+
+# --- Queue PRODUCER (weekly cron enqueues the re-ingest batch) ---
+[[queues.producers]]
+binding = "MP_FMCSA_INGEST"
+queue = "mp-fmcsa-ingest"
+
+# --- Queue CONSUMER (processes fmcsa_refresh messages) ---
+[[queues.consumers]]
+queue = "mp-fmcsa-ingest"
+max_batch_size = 10
+max_retries = 3
+
+# --- Cron triggers: weekly SAFER re-ingest + 15-minute alert dispatch ---
+[triggers]
+crons = ["0 8 * * 1", "*/15 * * * *"]

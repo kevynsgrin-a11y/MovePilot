@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/notify.sh\" \"Site Factory: Claude Code needs your input\""
+          }
+        ]
+      }
+    ]
+  }
+}

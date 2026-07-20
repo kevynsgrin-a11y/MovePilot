@@ -1,0 +1,264 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   MovePilot design tokens — Visual Blueprint §2. Two themes:
+   :root                = light "Ivory" (app + long-session reading, app default)
+   [data-theme="dark"]  = dark "Cockpit" (marketing + hero, marketing default)
+   The header toggle writes data-theme on <html> and persists to localStorage.
+   ========================================================================== */
+
+:root {
+  /* Core brand identity (theme-independent) */
+  --navy: #0b2a4a;
+  --navy-600: #123a63;
+  --navy-900: #061826;
+  --accent: #14b8a6; /* VERIFIED teal — the one signal color */
+  --accent-bright: #3fe0cf; /* glows, route-lines, focus ring, strokes on DARK only */
+  --accent-ink: #0e8f7e; /* teal-as-TEXT/links on light surfaces (AA-safe) */
+  --copper: #b7793f; /* PREMIUM / Vault only */
+  --copper-tint: #f4e7d6;
+
+  /* Light "Ivory" surfaces + text */
+  --bg: #faf7f2;
+  --surface: #ffffff;
+  --surface-raised: #fffdfa;
+  --surface-sunk: #f0ebe3;
+  --border: #e4ddd2;
+  --border-strong: #c9c0b4;
+  --text: #12202e;
+  --text-muted: #4a5568;
+  --text-faint: #6e665b;
+  --success: #1e7a54;
+  --warn: #b0740f;
+  --danger: #c0392b;
+
+  /* Elevation (navy-tinted) */
+  --e1: 0 1px 2px rgba(11, 42, 74, 0.06), 0 1px 3px rgba(11, 42, 74, 0.08);
+  --e2: 0 4px 12px rgba(11, 42, 74, 0.08), 0 2px 4px rgba(11, 42, 74, 0.06);
+  --e3: 0 12px 32px rgba(11, 42, 74, 0.12), 0 4px 8px rgba(11, 42, 74, 0.06);
+  --e4: 0 24px 64px rgba(6, 24, 38, 0.18);
+  --glow-accent: 0 0 0 1px rgba(20, 184, 166, 0.4), 0 0 24px rgba(63, 224, 207, 0.25);
+
+  /* Radii */
+  --r-xs: 4px;
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 24px;
+  --r-2xl: 32px;
+  --r-pill: 999px;
+
+  /* Spacing scale (4px base) */
+  --space-0: 0;
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-80: 80px;
+  --space-96: 96px;
+  --space-128: 128px;
+
+  /* Motion tokens (Blueprint §6) */
+  --ease-out-quart: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-micro: 120ms;
+  --dur-fast: 180ms;
+  --dur-base: 280ms;
+  --dur-mid: 420ms;
+  --dur-slow: 680ms;
+  --dur-xslow: 900ms;
+
+  /* Chrome */
+  --header-h: 64px;
+
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #0b1220;
+  --surface: #0f1a2c;
+  --surface-raised: #13233a;
+  --surface-sunk: #0a0f1a;
+  --border: #1d2b40;
+  --border-strong: #2e4462;
+  --text: #eaf1f7;
+  --text-muted: #a6b6c9;
+  --text-faint: #8193a8;
+  --navy: #4fa3e0; /* brightens to sky-blue for legibility on ink */
+  --accent: #2fd3c1;
+  --success: #4ade9e;
+  --warn: #f0b24a;
+  --danger: #ff6b5e;
+
+  /* Dark shadows deepen; lean on the accent glow for lift */
+  --e1: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --e2: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --e3: 0 12px 32px rgba(0, 0, 0, 0.55);
+  --e4: 0 24px 64px rgba(0, 0, 0, 0.6);
+
+  color-scheme: dark;
+}
+
+/* ---------------------------------------------------------------------------
+   Base typography + resets
+   ------------------------------------------------------------------------- */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Prevent horizontal body scroll — wide content scrolls in its own container */
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  /* Every figure that can roll uses tabular lining numerals so digits don't jitter */
+  .tabular,
+  .data-hero,
+  .data-raw {
+    font-variant-numeric: tabular-nums lining-nums;
+    font-feature-settings: 'tnum' 1, 'lnum' 1;
+  }
+
+  .data-raw {
+    font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Designed focus ring (:focus-visible only). Ink halo added on dark/photo via
+     the .focus-halo helper where needed so the ring clears >=3:1 on any bg. */
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 3px solid var(--accent-bright);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* Anchor targets clear the sticky header */
+  :target {
+    scroll-margin-top: var(--header-h);
+  }
+
+  /* iOS: inputs at >=16px never trigger zoom */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+@layer components {
+  /* Content gutter — 1200px cap, centered */
+  .container-mp {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: clamp(16px, 4vw, 32px);
+  }
+
+  /* Prose measure for editorial pages */
+  .prose-mp {
+    max-width: 68ch;
+  }
+
+  /* Skeleton shimmer (gated behind 200ms by consumers). transform-only. */
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--surface-sunk);
+    border-radius: var(--r-sm);
+  }
+
+  .skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.06) 50%,
+      transparent 100%
+    );
+    animation: shimmer 1400ms ease-in-out infinite;
+  }
+
+  [data-theme='dark'] .skeleton::after {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      transparent 100%
+    );
+  }
+
+  /* Route-line draw-in (§2.7.1). pathLength=100 makes dash units score-agnostic. */
+  .mp-route-draw {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: mp-route-draw 1400ms var(--ease-out-quart) forwards;
+  }
+
+  @keyframes mp-route-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* Mesh-aurora hero backdrop (CSS-only, static-safe) */
+  .mesh-aurora {
+    background-color: #0b1220;
+    background-image:
+      radial-gradient(60% 55% at 82% 12%, rgba(20, 184, 166, 0.22) 0%, transparent 60%),
+      radial-gradient(55% 55% at 12% 88%, rgba(183, 121, 63, 0.14) 0%, transparent 60%),
+      radial-gradient(90% 90% at 50% 30%, rgba(11, 42, 74, 0.65) 0%, transparent 70%);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced-motion backstop (Blueprint §7). Kills meaningful-number tickers,
+   parallax, sweeps, spine draws. Keep instant color/opacity feedback + focus.
+   ------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
