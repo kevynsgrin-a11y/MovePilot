@@ -166,16 +166,15 @@ All endpoints are Cloudflare Pages Functions under `/api/*` (Workers runtime). F
 
 ## Public domain deployment
 
-The current v0/Vercel interface is published at
+The full Cloudflare-native application is published at
 [`https://relocationstation.app`](https://relocationstation.app) through the
 Cloudflare Worker in [`cloudflare/`](cloudflare/). Cloudflare manages the apex
 and `www` DNS records and TLS certificates; `www` redirects permanently to the
 apex. The edge also supplies SPA fallback for direct client-side route visits.
 
-This public origin is currently a static interface: its `/api/*` routes return
-404. The Worker does not fabricate backend data. The Cloudflare Pages Functions
-and their D1, KV, and Queue bindings still need production provisioning before
-the interactive workflows documented above can run end to end.
+The upstream `movepilot.pages.dev` deployment includes the Vite frontend and
+Pages Functions. Production D1, KV, and Queue bindings power the documented API;
+the separate companion Worker owns the Queue consumer and cron schedules.
 
 ## Local dev & deploy quickstart
 

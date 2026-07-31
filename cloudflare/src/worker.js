@@ -1,4 +1,4 @@
-const UPSTREAM_ORIGIN = "https://movepilot-theta.vercel.app";
+const UPSTREAM_ORIGIN = "https://movepilot.pages.dev";
 const CANONICAL_ORIGIN = "https://relocationstation.app";
 
 function canonicalUrl(url) {
@@ -39,8 +39,7 @@ export default {
     const upstreamUrl = new URL(incomingUrl.pathname + incomingUrl.search, UPSTREAM_ORIGIN);
     let upstreamResponse = await fetchUpstream(request, upstreamUrl);
 
-    // The v0/Vercel export currently serves only its root document. Preserve
-    // client-side routing for direct visits without masking real API failures.
+    // Preserve client-side routing for direct visits without masking API errors.
     if (isSpaNavigation(request, incomingUrl, upstreamResponse)) {
       const appShellUrl = new URL("/", UPSTREAM_ORIGIN);
       upstreamResponse = await fetchUpstream(request, appShellUrl);
