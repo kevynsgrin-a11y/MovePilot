@@ -8,19 +8,19 @@
 
 name = "movepilot-worker"
 main = "index.js"
-compatibility_date = "2026-07-16"
+compatibility_date = "2026-07-31"
 compatibility_flags = ["nodejs_compat"]
 
 # --- Same D1 as the Pages project ---
 [[d1_databases]]
 binding = "MP_DB"
-database_name = "movepilot"
-database_id = "00000000-0000-0000-0000-000000000000" # same DB id as root wrangler.toml
+database_name = "movepilot-db"
+database_id = "ee5146d0-eda1-4620-9bc1-ccc1a58d6c2b"
 
 # --- Same KV as the Pages project ---
 [[kv_namespaces]]
 binding = "MP_KV"
-id = "00000000000000000000000000000000" # same namespace id as root wrangler.toml
+id = "239e449ede5e478fa79ec79ef3f90e77"
 
 # --- Queue PRODUCER (weekly cron enqueues the re-ingest batch) ---
 [[queues.producers]]
@@ -36,3 +36,8 @@ max_retries = 3
 # --- Cron triggers: weekly SAFER re-ingest + 15-minute alert dispatch ---
 [triggers]
 crons = ["0 8 * * 1", "*/15 * * * *"]
+
+# Persist invocation logs for queue and scheduled-event diagnostics.
+[observability]
+enabled = true
+head_sampling_rate = 1

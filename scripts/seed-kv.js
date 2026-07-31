@@ -25,6 +25,7 @@ import { spawnSync } from 'node:child_process';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 const BINDING = 'MP_KV';
+const WRANGLER = join(ROOT, 'node_modules', 'wrangler', 'bin', 'wrangler.js');
 
 // key -> seed file
 const MAP = {
@@ -43,13 +44,13 @@ const scopeFlag = remote ? '--remote' : '--local';
 for (const [key, rel] of Object.entries(MAP)) {
   // Minify the JSON so it stores compactly and is valid on read.
   const value = JSON.stringify(JSON.parse(readFileSync(join(ROOT, rel), 'utf8')));
-  const cmdArgs = ['wrangler', 'kv', 'key', 'put', '--binding', BINDING, scopeFlag, key, value];
+  const cmdArgs = [WRANGLER, 'kv', 'key', 'put', '--binding', BINDING, scopeFlag, key, value];
   if (printOnly) {
-    console.log('npx ' + cmdArgs.map((a) => (/\s|["{]/.test(a) ? JSON.stringify(a) : a)).join(' '));
+    console.log('node ' + cmdArgs.map((a) => (/\s|["{]/.test(a) ? JSON.stringify(a) : a)).join(' '));
     continue;
   }
   console.log(`Seeding ${key} <- ${rel} (${scopeFlag})`);
-  const res = spawnSync('npx', cmdArgs, { cwd: ROOT, stdio: 'inherit' });
+  const res = spawnSync(process.execPath, cmdArgs, { cwd: ROOT, stdio: 'inherit' });
   if (res.status !== 0) {
     console.error(`Failed to seed ${key} (exit ${res.status}).`);
     process.exit(res.status || 1);
@@ -63,13 +64,13 @@ const zip3 = JSON.parse(readFileSync(join(ROOT, 'seed/zip3_centroids.json'), 'ut
 for (const [prefix, centroid] of Object.entries(zip3)) {
   const key = `geo:zip3:${prefix}`;
   const value = JSON.stringify(centroid);
-  const cmdArgs = ['wrangler', 'kv', 'key', 'put', '--binding', BINDING, scopeFlag, key, value];
+  const cmdArgs = [WRANGLER, 'kv', 'key', 'put', '--binding', BINDING, scopeFlag, key, value];
   if (printOnly) {
-    console.log('npx ' + cmdArgs.map((a) => (/\s|["{]/.test(a) ? JSON.stringify(a) : a)).join(' '));
+    console.log('node ' + cmdArgs.map((a) => (/\s|["{]/.test(a) ? JSON.stringify(a) : a)).join(' '));
     continue;
   }
   console.log(`Seeding ${key} <- seed/zip3_centroids.json (${scopeFlag})`);
-  const res = spawnSync('npx', cmdArgs, { cwd: ROOT, stdio: 'inherit' });
+  const res = spawnSync(process.execPath, cmdArgs, { cwd: ROOT, stdio: 'inherit' });
   if (res.status !== 0) {
     console.error(`Failed to seed ${key} (exit ${res.status}).`);
     process.exit(res.status || 1);

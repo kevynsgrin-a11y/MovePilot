@@ -6,21 +6,21 @@
 # companion Worker (worker/wrangler.toml).
 
 name = "movepilot"
-compatibility_date = "2026-07-16"
+compatibility_date = "2026-07-31"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "dist"
 
 # --- D1 (relational core: users, sessions, inventory, timelines, vault, logs) ---
 [[d1_databases]]
 binding = "MP_DB"
-database_name = "movepilot"
-database_id = "00000000-0000-0000-0000-000000000000" # set via: npx wrangler d1 create movepilot
+database_name = "movepilot-db"
+database_id = "ee5146d0-eda1-4620-9bc1-ccc1a58d6c2b"
 migrations_dir = "migrations"
 
 # --- KV (edge config tables + cached FMCSA records) ---
 [[kv_namespaces]]
 binding = "MP_KV"
-id = "00000000000000000000000000000000" # set via: npx wrangler kv namespace create MP_KV
+id = "239e449ede5e478fa79ec79ef3f90e77"
 
 # --- Queue PRODUCER only (admin ingest trigger enqueues to MP_FMCSA_INGEST) ---
 [[queues.producers]]

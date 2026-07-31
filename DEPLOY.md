@@ -5,6 +5,19 @@ deploys to **Cloudflare**. Frontend static assets build to `dist/`; the API is
 Pages Functions under `functions/`; background jobs run in the companion Worker
 (`worker/`). This runbook provisions the data stores, then deploys.
 
+## Production status (2026-07-31)
+
+- Pages project: `movepilot` (`https://movepilot.pages.dev`)
+- D1 database: `movepilot-db`
+- KV namespace: `movepilot-MP_KV`
+- Queue: `mp-fmcsa-ingest`
+- Companion Worker: `movepilot-worker`
+- Canonical domain: `https://relocationstation.app`
+
+The resource IDs are committed in the two Wrangler configuration files. D1
+migrations and KV seeds are applied, and the Queue consumer plus both cron
+triggers are active.
+
 > **Fastest path:** hand me a **Cloudflare API token** (dashboard → My Profile →
 > API Tokens → *Create* → "Edit Cloudflare Workers" template, which also covers
 > Pages/D1/KV/Queues) and I can run all of this from the build environment and
@@ -23,7 +36,7 @@ npx wrangler d1 create movepilot-db
 #   → copy the printed database_id into wrangler.toml under [[d1_databases]] (binding "MP_DB")
 
 # KV (cache + static config + FMCSA records)
-npx wrangler kv namespace create MP_KV
+npx wrangler kv namespace create movepilot-MP_KV
 #   → copy the printed id into wrangler.toml under [[kv_namespaces]] (binding "MP_KV")
 
 # Queue (FMCSA re-ingest)
