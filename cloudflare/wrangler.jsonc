@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "relocationstation-vercel-proxy",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-07-31",
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "relocationstation.app",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.relocationstation.app",
+      "custom_domain": true
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

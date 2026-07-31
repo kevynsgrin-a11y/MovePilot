@@ -164,6 +164,19 @@ All endpoints are Cloudflare Pages Functions under `/api/*` (Workers runtime). F
 
 > Background/scheduled work — the FMCSA queue consumer, the weekly SAFER re-ingest cron, and the 15-minute SMS-dispatch cron — runs in the **companion Worker** (`worker/`), not in Pages Functions.
 
+## Public domain deployment
+
+The current v0/Vercel interface is published at
+[`https://relocationstation.app`](https://relocationstation.app) through the
+Cloudflare Worker in [`cloudflare/`](cloudflare/). Cloudflare manages the apex
+and `www` DNS records and TLS certificates; `www` redirects permanently to the
+apex. The edge also supplies SPA fallback for direct client-side route visits.
+
+This public origin is currently a static interface: its `/api/*` routes return
+404. The Worker does not fabricate backend data. The Cloudflare Pages Functions
+and their D1, KV, and Queue bindings still need production provisioning before
+the interactive workflows documented above can run end to end.
+
 ## Local dev & deploy quickstart
 
 ```bash
