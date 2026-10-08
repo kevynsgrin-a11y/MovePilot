@@ -3,6 +3,8 @@ name: CI
 # Fleet-standard test gate (BreachLedger house style): pull_request-triggered
 # so a PR can never be seen green-at-merge without the suite having run.
 on:
+  push:
+    branches: [main]
   pull_request:
   workflow_dispatch: {}
 
